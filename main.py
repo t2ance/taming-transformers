@@ -1,21 +1,15 @@
-import argparse
-import datetime
-import glob
-import importlib
-import os
-import sys
-
+import argparse, os, sys, datetime, glob, importlib
+from omegaconf import OmegaConf
 import numpy as np
-import pytorch_lightning as pl
+from PIL import Image
 import torch
 import torchvision
-from PIL import Image
-from omegaconf import OmegaConf
+from torch.utils.data import random_split, DataLoader, Dataset
+import pytorch_lightning as pl
 from pytorch_lightning import seed_everything
-from pytorch_lightning.callbacks import Callback
 from pytorch_lightning.trainer import Trainer
+from pytorch_lightning.callbacks import ModelCheckpoint, Callback, LearningRateMonitor
 from pytorch_lightning.utilities import rank_zero_only
-from torch.utils.data import DataLoader, Dataset
 
 from taming.data.utils import custom_collate
 
@@ -324,52 +318,8 @@ class ImageLogger(Callback):
 
 
 if __name__ == "__main__":
-    # custom parser to specify config files, train, test and debug mode,
-    # postfix, resume.
-    # `--key value` arguments are interpreted as arguments to the trainer.
-    # `nested.key=value` arguments are interpreted as config parameters.
-    # configs are merged from left-to-right followed by command line parameters.
-
-    # model:
-    #   base_learning_rate: float
-    #   target: path to lightning module
-    #   params:
-    #       key: value
-    # data:
-    #   target: main.DataModuleFromConfig
-    #   params:
-    #      batch_size: int
-    #      wrap: bool
-    #      train:
-    #          target: path to train dataset
-    #          params:
-    #              key: value
-    #      validation:
-    #          target: path to validation dataset
-    #          params:
-    #              key: value
-    #      test:
-    #          target: path to test dataset
-    #          params:
-    #              key: value
-    # lightning: (optional, has sane defaults and can be specified on cmdline)
-    #   trainer:
-    #       additional arguments to trainer
-    #   logger:
-    #       logger to instantiate
-    #   modelcheckpoint:
-    #       modelcheckpoint to instantiate
-    #   callbacks:
-    #       callback1:
-    #           target: importpath
-    #           params:
-    #               key: value
-
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
 
-    # add cwd for convenience and to make classes in this file available when
-    # running as `python main.py`
-    # (in particular `main.DataModuleFromConfig`)
     sys.path.append(os.getcwd())
 
     parser = get_parser()
@@ -444,11 +394,6 @@ if __name__ == "__main__":
         # trainer and callbacks
         trainer_kwargs = dict()
 
-        # default logger configs
-        # NOTE wandb < 0.10.0 interferes with shutdown
-        # wandb >= 0.10.0 seems to fix it but still interferes with pudb
-        # debugging (wrongly sized pudb ui)
-        # thus prefer testtube for now
         default_logger_cfgs = {
             "wandb": {
                 "target": "pytorch_lightning.loggers.WandbLogger",
