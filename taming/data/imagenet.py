@@ -148,6 +148,7 @@ class ImageNetTrain(ImageNetBase):
                 path = os.path.join(self.root, self.FILES[0])
                 if not os.path.exists(path) or not os.path.getsize(path) == self.SIZES[0]:
                     import academictorrents as at
+                    print(f'Getting ImagetNet training data from {self.AT_HASH} to {self.root}')
                     atpath = at.get(self.AT_HASH, datastore=self.root)
                     assert atpath == path
 
@@ -205,6 +206,7 @@ class ImageNetValidation(ImageNetBase):
                 path = os.path.join(self.root, self.FILES[0])
                 if not os.path.exists(path) or not os.path.getsize(path) == self.SIZES[0]:
                     import academictorrents as at
+                    print(f'Getting ImagetNet validation data from {self.AT_HASH} to {self.root}')
                     atpath = at.get(self.AT_HASH, datastore=self.root)
                     assert atpath == path
 
