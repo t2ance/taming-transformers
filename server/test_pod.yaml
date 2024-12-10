@@ -17,7 +17,7 @@ spec:
          conda env create -f environment.yaml;
          conda activate taming;
          pip install academictorrents;
-         export XDG_CACHE_HOME="/data/vqvae";
+         export XDG_CACHE_HOME="/data/vqgan";
          jupyter lab --ip=0.0.0.0 --port=8888 --NotebookApp.token=627a7b3b --no-browser --allow-root;
          '
       ]
@@ -26,11 +26,11 @@ spec:
           name: peijia-volume3
       resources:
         requests:
-          nvidia.com/gpu: "1"
+          #          nvidia.com/gpu: "1"
           memory: "12G"
           cpu: "2"
         limits:
-          nvidia.com/gpu: "1"
+          #          nvidia.com/gpu: "1"
           memory: "12G"
           cpu: "2"
   affinity:
@@ -42,6 +42,10 @@ spec:
                 operator: In
                 values:
                   - NVIDIA-GeForce-RTX-3090
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                  - ry-gpu-10.sdsc.optiputer.net
   volumes:
     - name: peijia-volume3
       persistentVolumeClaim:

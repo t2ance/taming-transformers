@@ -5,27 +5,12 @@
       <list>
         <JupyterConnectionParameters>
           <option name="authType" value="notebook" />
-          <option name="urlString" value="http://localhost:9876" />
+          <option name="urlString" value="http://localhost:11451" />
           <authParams2>
             <map />
           </authParams2>
         </JupyterConnectionParameters>
       </list>
-    </option>
-    <option name="moduleParameters">
-      <map>
-        <entry key="$PROJECT_DIR$/.idea/taming-transformers.iml">
-          <value>
-            <JupyterConnectionParameters>
-              <option name="authType" value="notebook" />
-              <option name="urlString" value="http://localhost:9876" />
-              <authParams2>
-                <map />
-              </authParams2>
-            </JupyterConnectionParameters>
-          </value>
-        </entry>
-      </map>
     </option>
   </component>
 </project>
