@@ -16,9 +16,8 @@ spec:
          source /opt/conda/etc/profile.d/conda.sh;
          conda env create -f environment.yaml;
          conda activate taming;
-         pip install academictorrents;
+         pip install academictorrents datasets;
          export XDG_CACHE_HOME='/data/vqvae';
-         pip install datasets;
          jupyter lab --ip=0.0.0.0 --port=8888 --NotebookApp.token='' --no-browser --allow-root;
          "
       ]
@@ -29,11 +28,11 @@ spec:
         requests:
           #          nvidia.com/gpu: "1"
           memory: "12G"
-          cpu: "2"
+          cpu: "6"
         limits:
           #          nvidia.com/gpu: "1"
           memory: "12G"
-          cpu: "2"
+          cpu: "6"
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
