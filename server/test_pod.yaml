@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: taming-test
+  name: peijia-test
 spec:
   containers:
     - name: gpu-container
