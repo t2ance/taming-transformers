@@ -15,8 +15,9 @@ spec:
          conda init bash;
          source /opt/conda/etc/profile.d/conda.sh;
          conda env create -f environment.yaml;
+         conda install nb_conda;
          conda activate taming;
-         pip install academictorrents datasets;
+         pip install academictorrents datasets jupyter;
          export XDG_CACHE_HOME='/data/vqvae';
          jupyter lab --ip=0.0.0.0 --port=8888 --NotebookApp.token='' --no-browser --allow-root;
          "
