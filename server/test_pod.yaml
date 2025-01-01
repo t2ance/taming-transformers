@@ -14,7 +14,7 @@ spec:
          cd taming-transformers;
          conda init bash;
          source /opt/conda/etc/profile.d/conda.sh;
-         conda env create -f environment.yaml;
+         conda env update --file environment.yaml --prune;
          conda install nb_conda;
          conda activate taming;
          pip install academictorrents datasets jupyter;
@@ -22,6 +22,7 @@ spec:
          jupyter lab --ip=0.0.0.0 --port=8888 --NotebookApp.token='' --no-browser --allow-root;
          "
       ]
+      #         conda env create -f environment.yaml;
       volumeMounts:
         - mountPath: /data
           name: peijia-volume3
