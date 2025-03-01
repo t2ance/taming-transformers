@@ -28,14 +28,14 @@ model:
           out_ch: 3
           ch: 128
           ch_mult:
-          - 1
-          - 1
-          - 2
-          - 2
-          - 4
+            - 1
+            - 1
+            - 2
+            - 2
+            - 4
           num_res_blocks: 2
           attn_resolutions:
-          - 16
+            - 16
           dropout: 0.0
         lossconfig:
           target: taming.modules.losses.DummyLoss
@@ -53,7 +53,7 @@ data:
       params:
         data_path: data/open_images_annotations_100  # substitute with path to full dataset
         split: train
-        keys: [image, objects_bbox, file_name, annotations]
+        keys: [ image, objects_bbox, file_name, annotations ]
         no_tokens: 8192
         target_image_size: 256
         category_allow_list_target: taming.data.open_images_helper.top_300_classes_plus_coco_compatibility
@@ -71,7 +71,7 @@ data:
       params:
         data_path: data/open_images_annotations_100  # substitute with path to full dataset
         split: validation
-        keys: [image, objects_bbox, file_name, annotations]
+        keys: [ image, objects_bbox, file_name, annotations ]
         no_tokens: 8192
         target_image_size: 256
         category_allow_list_target: taming.data.open_images_helper.top_300_classes_plus_coco_compatibility

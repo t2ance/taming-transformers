@@ -45,7 +45,7 @@ def get_z_indices_crop_out(z_indices: Tensor, predict_x: int, predict_y: int) ->
     x0 = _helper(predict_x, WIDTH, first_stage_factor)
     y0 = _helper(predict_y, HEIGHT, first_stage_factor)
     no_images = z_indices.shape[0]
-    cut_out_1 = z_indices[:, y0:predict_y, x0:x0+first_stage_factor].reshape((no_images, -1))
+    cut_out_1 = z_indices[:, y0:predict_y, x0:x0 + first_stage_factor].reshape((no_images, -1))
     cut_out_2 = z_indices[:, predict_y, x0:predict_x]
     return torch.cat((cut_out_1, cut_out_2), dim=1)
 
@@ -64,11 +64,12 @@ def sample(model: Net2NetTransformer, annotations: List[Annotation], dataset: An
         conditional_indices = conditional_builder.build(annotations, crop_coordinates)
         c_indices = conditional_indices.to(device).repeat(no_samples, 1)
         z_indices = torch.zeros((no_samples, 0), device=device).long()
-        output_indices = model.sample(z_indices, c_indices, steps=x_max*y_max, temperature=temperature,
+        output_indices = model.sample(z_indices, c_indices, steps=x_max * y_max, temperature=temperature,
                                       sample=True, top_k=top_k)
     else:
         output_indices = torch.zeros((no_samples, y_max, x_max), device=device).long()
-        for predict_y, predict_x in tqdm(product(range(y_max), range(x_max)), desc='sampling_image', total=x_max*y_max):
+        for predict_y, predict_x in tqdm(product(range(y_max), range(x_max)), desc='sampling_image',
+                                         total=x_max * y_max):
             crop_coordinates = get_crop_coordinates(predict_x, predict_y)
             z_indices = get_z_indices_crop_out(output_indices, predict_x, predict_y)
             conditional_indices = conditional_builder.build(annotations, crop_coordinates)
@@ -97,9 +98,9 @@ def get_resolution(resolution_str: str) -> (Tuple[int, int], Tuple[int, int]):
     res_h, res_w = resolution_str.split(',')
     res_h = max(int(res_h), trained_on_res)
     res_w = max(int(res_w), trained_on_res)
-    z_h = int(round(res_h/first_stage_factor))
-    z_w = int(round(res_w/first_stage_factor))
-    return (z_h, z_w), (z_h*first_stage_factor, z_w*first_stage_factor)
+    z_h = int(round(res_h / first_stage_factor))
+    z_w = int(round(res_w / first_stage_factor))
+    return (z_h, z_w), (z_h * first_stage_factor, z_w * first_stage_factor)
 
 
 def add_arg_to_parser(parser):
@@ -142,7 +143,7 @@ if __name__ == "__main__":
         if os.path.isfile(opt.resume):
             paths = opt.resume.split("/")
             try:
-                idx = len(paths)-paths[::-1].index("logs")+1
+                idx = len(paths) - paths[::-1].index("logs") + 1
             except ValueError:
                 idx = -2  # take a guess: path/to/logdir/checkpoints/model.ckpt
             logdir = "/".join(paths[:idx])
@@ -153,7 +154,7 @@ if __name__ == "__main__":
             ckpt = os.path.join(logdir, "checkpoints", "last.ckpt")
         print(f"logdir:{logdir}")
         base_configs = sorted(glob.glob(os.path.join(logdir, "configs/*-project.yaml")))
-        opt.base = base_configs+opt.base
+        opt.base = base_configs + opt.base
 
     if opt.config:
         if type(opt.config) == str:
@@ -195,4 +196,4 @@ if __name__ == "__main__":
         for i, annotations in tqdm(enumerate(batch['annotations']), desc='within_batch', total=data_loader.batch_size):
             imgs = sample(model, annotations, dsets.datasets["validation"], conditional_builder,
                           opt.n_samples_per_layout, opt.temperature, opt.top_k)
-            save_image(imgs, outdir.joinpath(f'{batch_no:04}_{i:02}.png'), n_row=opt.n_samples_per_layout+1)
+            save_image(imgs, outdir.joinpath(f'{batch_no:04}_{i:02}.png'), n_row=opt.n_samples_per_layout + 1)

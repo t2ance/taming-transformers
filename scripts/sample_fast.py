@@ -10,12 +10,11 @@ from einops import repeat
 from main import instantiate_from_config
 from taming.modules.transformer.mingpt import sample_with_past
 
-
 rescale = lambda x: (x + 1.) / 2.
 
 
 def chw_to_pillow(x):
-    return Image.fromarray((255*rescale(x.detach().cpu().numpy().transpose(1,2,0))).clip(0,255).astype(np.uint8))
+    return Image.fromarray((255 * rescale(x.detach().cpu().numpy().transpose(1, 2, 0))).clip(0, 255).astype(np.uint8))
 
 
 @torch.no_grad()
@@ -61,12 +60,12 @@ def sample_unconditional(model, batch_size, steps=256, temperature=None, top_k=N
 @torch.no_grad()
 def run(logdir, model, batch_size, temperature, top_k, unconditional=True, num_samples=50000,
         given_classes=None, top_p=None):
-    batches = [batch_size for _ in range(num_samples//batch_size)] + [num_samples % batch_size]
+    batches = [batch_size for _ in range(num_samples // batch_size)] + [num_samples % batch_size]
     if not unconditional:
         assert given_classes is not None
         print("Running in pure class-conditional sampling mode. I will produce "
               f"{num_samples} samples for each of the {len(given_classes)} classes, "
-              f"i.e. {num_samples*len(given_classes)} in total.")
+              f"i.e. {num_samples * len(given_classes)} in total.")
         for class_label in tqdm(given_classes, desc="Classes"):
             for n, bs in tqdm(enumerate(batches), desc="Sampling Class"):
                 if bs == 0: break
@@ -128,7 +127,7 @@ def get_parser():
         nargs="*",
         metavar="base_config.yaml",
         help="paths to base configs. Loaded from left-to-right. "
-        "Parameters can be overwritten or added with command-line options of the form `--key value`.",
+             "Parameters can be overwritten or added with command-line options of the form `--key value`.",
         default=list(),
     )
     parser.add_argument(
@@ -218,9 +217,9 @@ if __name__ == "__main__":
     if os.path.isfile(opt.resume):
         paths = opt.resume.split("/")
         try:
-            idx = len(paths)-paths[::-1].index("logs")+1
+            idx = len(paths) - paths[::-1].index("logs") + 1
         except ValueError:
-            idx = -2 # take a guess: path/to/logdir/checkpoints/model.ckpt
+            idx = -2  # take a guess: path/to/logdir/checkpoints/model.ckpt
         logdir = "/".join(paths[:idx])
         ckpt = opt.resume
     else:
@@ -229,7 +228,7 @@ if __name__ == "__main__":
         ckpt = os.path.join(logdir, "checkpoints", "last.ckpt")
 
     base_configs = sorted(glob.glob(os.path.join(logdir, "configs/*-project.yaml")))
-    opt.base = base_configs+opt.base
+    opt.base = base_configs + opt.base
 
     configs = [OmegaConf.load(cfg) for cfg in opt.base]
     cli = OmegaConf.from_dotlist(unknown)

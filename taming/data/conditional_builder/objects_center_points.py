@@ -67,7 +67,7 @@ class ObjectsCenterPointsConditionalBuilder:
 
     def token_pair_from_bbox(self, bbox: BoundingBox) -> Tuple[int, int]:
         return self.tokenize_coordinates(bbox[0], bbox[1]), \
-               self.tokenize_coordinates(bbox[0] + bbox[2], bbox[1] + bbox[3])
+            self.tokenize_coordinates(bbox[0] + bbox[2], bbox[1] + bbox[3])
 
     def inverse_build(self, conditional: LongTensor) \
             -> Tuple[List[Tuple[int, Tuple[float, float]]], Optional[BoundingBox]]:
